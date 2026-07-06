@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Anurag Mohanty — Product Manager building AI-driven product experiences in B2B SaaS.">
-<meta property="og:title" content="Anurag Mohanty — Product Manager">
+<meta name="description" content="Anurag Mohanty — Product Manager building AI-driven product experiences in B2B SaaS">
+<meta property="og:title" content="Anurag Mohanty - Portfolio">
 <meta property="og:description" content="Product Management professional specialising in AI, B2B SaaS and technical product strategy.">
 <title>Anurag Mohanty — Product Manager</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 /* ─────────────────────────────────────────────────
    DESIGN TOKENS
@@ -68,15 +70,15 @@ ul{list-style:none}
 /* ─────────────────────────────────────────────────
    SCROLL REVEAL
 ───────────────────────────────────────────────── */
-.rv   {opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-.rv-l {opacity:0;transform:translateX(-26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-.rv-r {opacity:0;transform:translateX(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-.rv-s {opacity:0;transform:scale(.94);transition:opacity .65s var(--ease),transform .65s var(--ease)}
-.rv.on,.rv-l.on,.rv-r.on,.rv-s.on{opacity:1;transform:none}
+.rv   {opacity:0;transform:translateY(26px);clip-path:inset(0 0 100% 0);transition:opacity .8s var(--ease),transform .8s var(--ease),clip-path .8s var(--ease)}
+.rv-l {opacity:0;transform:translateX(-26px);clip-path:inset(0 100% 0 0);transition:opacity .8s var(--ease),transform .8s var(--ease),clip-path .8s var(--ease)}
+.rv-r {opacity:0;transform:translateX(26px);clip-path:inset(0 0 0 100%);transition:opacity .8s var(--ease),transform .8s var(--ease),clip-path .8s var(--ease)}
+.rv-s {opacity:0;transform:scale(.94);clip-path:inset(0 0 0 0 round 999px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.on,.rv-l.on,.rv-r.on,.rv-s.on{opacity:1;transform:none;clip-path:inset(0 0 0 0)}
 .d1{transition-delay:.08s}.d2{transition-delay:.16s}
 .d3{transition-delay:.24s}.d4{transition-delay:.32s}
 @media(prefers-reduced-motion:reduce){
-  .rv,.rv-l,.rv-r,.rv-s{opacity:1;transform:none;transition:none}
+  .rv,.rv-l,.rv-r,.rv-s{opacity:1;transform:none;clip-path:none;transition:none}
 }
 
 /* ─────────────────────────────────────────────────
@@ -100,58 +102,91 @@ ul{list-style:none}
 }
 
 /* ─────────────────────────────────────────────────
-   NAV
+   SIDEBAR (desktop) + TOPBAR (mobile)
 ───────────────────────────────────────────────── */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  background:rgba(255,253,244,.9);
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:272px;z-index:100;
+  background:rgba(255,253,244,.92);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid transparent;
-  transition:border-color .3s,box-shadow .3s;
+  border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;
+  padding:1.75rem 1.5rem;overflow-y:auto;
 }
-.nav.sc{border-color:var(--rule);box-shadow:0 1px 20px rgba(0,0,0,.06)}
-.nav-in{
-  max-width:var(--max);margin:0 auto;padding:0 2rem;
-  height:64px;display:flex;align-items:center;justify-content:space-between;
+.sb-profile{display:flex;align-items:center;gap:.75rem;padding-bottom:1.5rem;margin-bottom:1.25rem;border-bottom:1px solid var(--rule)}
+.sb-avatar{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--g300),var(--g500));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:1rem;color:var(--ink);
+  box-shadow:0 2px 10px rgba(168,134,8,.25);
 }
-.nav-logo{
-  font-family:var(--fd);font-size:1.25rem;color:var(--g600);
-  letter-spacing:-.01em;
-}
-.nav-logo span{color:var(--g500)}
-.nav-links{display:flex;gap:2.25rem;align-items:center}
-.nav-links a{
+.sb-name{font-family:var(--fd);font-size:1.05rem;color:var(--g600);letter-spacing:-.01em;line-height:1.2}
+.sb-name span{color:var(--g500)}
+.sb-role{font-size:.75rem;color:var(--ink3);margin-top:2px}
+.sb-nav{display:flex;flex-direction:column;gap:.15rem;margin-bottom:1.5rem}
+.sb-nav a{
+  display:flex;align-items:center;gap:.7rem;
   font-size:.875rem;font-weight:500;color:var(--ink3);
-  transition:color .2s;position:relative;
+  padding:.6rem .7rem;border-radius:8px;position:relative;
+  transition:color .2s,background .2s;
 }
-.nav-links a::after{
-  content:'';position:absolute;bottom:-4px;left:0;right:0;
-  height:2px;background:var(--g400);border-radius:2px;
-  transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease);
+.sb-nav a .ic{width:16px;height:16px;flex-shrink:0;opacity:.85}
+.sb-nav a:hover{color:var(--ink);background:var(--s100)}
+.sb-nav a.active{color:var(--ink);background:var(--g150)}
+.sb-label{
+  font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink4);margin:.75rem .7rem .35rem;
 }
-.nav-links a:hover,.nav-links a.active{color:var(--ink)}
-.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
-.nav-cta{
-  background:var(--g400)!important;color:var(--ink)!important;
-  padding:.5rem 1.25rem;border-radius:var(--radius);
-  font-size:.8125rem!important;font-weight:600!important;
-  transition:background .2s,transform .2s!important;
-  box-shadow:0 2px 8px rgba(168,134,8,.2);
+.sb-spacer{flex:1}
+.sb-bottom{display:flex;flex-direction:column;gap:.75rem;padding-top:1rem}
+.sb-card{
+  background:var(--white);border:1px solid var(--rule);border-radius:12px;
+  padding:.9rem 1rem;box-shadow:0 2px 12px rgba(0,0,0,.04);
 }
-.nav-cta:hover{background:var(--g300)!important;transform:translateY(-1px)}
-.nav-cta::after{display:none!important}
+.sb-time{font-family:var(--fd);font-size:1.2rem;color:var(--g600)}
+.sb-date{font-size:.75rem;color:var(--ink3);margin-top:2px}
+.sb-cv{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  background:var(--g400);color:var(--ink);font-weight:600;font-size:.8125rem;
+  padding:.7rem 1rem;border-radius:10px;
+  box-shadow:0 2px 10px rgba(168,134,8,.22);
+  transition:background .2s,transform .2s;
+}
+.sb-cv:hover{background:var(--g300);transform:translateY(-1px)}
+
+/* Mobile topbar (hidden on desktop) */
+.topbar{display:none}
+
 .mob-btn{
   display:none;background:none;border:none;cursor:pointer;
   flex-direction:column;gap:5px;padding:4px;
 }
 .mob-btn span{display:block;width:22px;height:1.5px;background:var(--ink);border-radius:2px;transition:.3s}
 
+@media(max-width:900px){
+  .sidebar{display:none}
+  .layout{display:block}
+  .topbar{
+    display:flex;position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(255,253,244,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid transparent;height:64px;align-items:center;
+    justify-content:space-between;padding:0 1.25rem;
+    transition:border-color .3s,box-shadow .3s;
+  }
+  .topbar.sc{border-color:var(--rule);box-shadow:0 1px 20px rgba(0,0,0,.06)}
+  .mob-btn{display:flex}
+}
+
 /* ─────────────────────────────────────────────────
    HERO
 ───────────────────────────────────────────────── */
+.main-content{flex:1;min-width:0;margin-left:272px}
+@media(max-width:900px){.main-content{margin-left:0;padding-top:64px}}
+
 .hero{
   min-height:100vh;display:flex;align-items:center;
-  padding-top:64px;background:var(--bg);position:relative;overflow:hidden;
+  background:var(--bg);position:relative;overflow:hidden;
 }
 /* Large bg monogram */
 .hero-mono{
@@ -439,7 +474,7 @@ ul{list-style:none}
   height:3px;
   background:linear-gradient(90deg,var(--g300),var(--g200));
 }
-.proj-featured-inner{padding:2.5rem 3rem}
+.proj-featured-inner{padding:1.75rem 2.5rem}
 .proj-company-badge{
   display:inline-flex;align-items:center;gap:.5rem;
   background:var(--g150);border:1px solid var(--g200);
@@ -696,6 +731,235 @@ ul{list-style:none}
   padding:1rem 0;border-bottom:1px solid var(--rule);display:block;
 }
 .mob-menu a:hover{color:var(--g500)}
+.ab2-stage,.exp2-stage,.proj2-stage,.ct2-stage{z-index:1}
+.skl2-section{position:relative;z-index:2;background:var(--bg)}
+
+/* ─────────────────────────────────────────────────
+   ABOUT 2.0 — unfolding container
+───────────────────────────────────────────────── */
+.ab2-intro{padding-top:0;padding-bottom:2rem}
+.ab2-pin{position:relative}
+.ab2-stage{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  perspective:1400px;
+}
+.ab2-box{
+  position:absolute;width:180px;height:120px;
+  transform-style:preserve-3d;
+}
+.ab2-box-face{
+  position:absolute;inset:0;border-radius:14px;
+  border:1px solid var(--rule-str);
+  background:linear-gradient(155deg,var(--white),var(--s100));
+  box-shadow:0 20px 50px rgba(30,25,10,.12);
+}
+.ab2-box-top{transform:rotateX(90deg) translateZ(60px);transform-origin:top}
+.ab2-box-glow{
+  position:absolute;inset:-40px;border-radius:50%;
+  background:radial-gradient(circle,rgba(238,200,32,.35),transparent 70%);
+  filter:blur(10px);
+}
+.ab2-card{
+  position:absolute;width:min(300px,78vw);
+  padding:2rem 1.75rem;border-radius:16px;
+  background:linear-gradient(160deg,var(--white),var(--s100));
+  border:1px solid var(--rule-str);
+  box-shadow:0 30px 60px -20px rgba(30,25,10,.25);
+  opacity:0;transform:translate3d(0,90px,-260px) rotateY(-46deg) scale(.55);
+  will-change:transform,opacity;
+}
+.ab2-card-icon{font-size:1.9rem;margin-bottom:.9rem;display:block}
+.ab2-card-title{font-family:var(--fd);font-size:1.35rem;color:var(--g600);margin-bottom:.6rem}
+.ab2-card-desc{font-size:.9rem;color:var(--ink3);line-height:1.6}
+.ab2-caption{
+  position:absolute;bottom:6%;left:50%;transform:translateX(-50%);
+  font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);
+  opacity:.8;
+}
+
+/* ─────────────────────────────────────────────────
+   EXPERIENCE 2.0 — expanding drawer
+───────────────────────────────────────────────── */
+.exp2-pin{position:relative}
+.exp2-stage{position:sticky;top:0;height:100vh;display:flex;align-items:center}
+.exp2-drawer{
+  position:relative;width:100%;margin:0 auto;
+  background:var(--white);
+  border:1px solid var(--rule);border-radius:14px;overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.05);
+  transition:box-shadow .3s;
+  transform-origin:top center;
+}
+.exp2-drawer:hover{box-shadow:0 12px 40px rgba(0,0,0,.09)}
+.exp2-drawer-bar{height:3px;background:linear-gradient(90deg,var(--g300),var(--g200))}
+.exp2-drawer-inner{padding:1.75rem 2.5rem}
+.exp2-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--g150);border:1px solid var(--g200);
+  border-radius:100px;padding:.3rem .875rem;
+  font-size:.75rem;font-weight:600;color:var(--g700);
+  letter-spacing:.04em;margin-bottom:1.25rem;
+}
+.exp2-drawer-head{display:flex;gap:1.1rem;align-items:flex-start}
+.exp2-node{
+  width:14px;height:14px;border-radius:50%;margin-top:.5rem;flex-shrink:0;
+  background:var(--g400);box-shadow:0 0 0 5px var(--g150);
+}
+.exp2-period{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--g600);font-weight:600;margin-bottom:.35rem}
+.exp2-title{font-family:var(--fd);font-size:clamp(1.5rem,2.5vw,2rem);letter-spacing:-.02em;color:var(--ink);margin-bottom:.3rem}
+.exp2-company{font-size:.9rem;color:var(--ink2);font-weight:600}
+.exp2-company span{font-weight:400;color:var(--ink3)}
+.exp2-body{display:grid;grid-template-columns:1.15fr .85fr;gap:1.75rem;margin-top:1.5rem}
+.exp2-bullets{display:flex;flex-direction:column;gap:.85rem}
+.exp2-bullet{
+  display:flex;gap:.65rem;font-size:.8rem;color:var(--ink2);line-height:1.55;
+  opacity:0;transform:translateX(36px);will-change:transform,opacity;
+}
+.exp2-bullet .bdot{width:6px;height:6px;border-radius:50%;background:var(--g400);margin-top:.45rem;flex-shrink:0}
+.exp2-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;align-content:start}
+.exp2-metric{
+  background:var(--white);border:1px solid var(--rule);border-radius:12px;
+  padding:1rem .9rem;text-align:center;
+  transform:scaleY(0);transform-origin:center;opacity:0;will-change:transform,opacity;
+}
+.exp2-metric-num{font-family:var(--fd);font-size:1.6rem;color:var(--g600)}
+.exp2-metric-label{font-size:.68rem;color:var(--ink3);margin-top:.25rem;line-height:1.3}
+.exp2-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem;opacity:0;transform:translateY(16px);will-change:transform,opacity}
+
+/* ─────────────────────────────────────────────────
+   PROJECTS 2.0 — opening presentation
+───────────────────────────────────────────────── */
+.proj2-pin{position:relative}
+.proj2-stage{display:block;padding:4rem 0}
+.proj2-card{
+  border-radius:28px;
+  box-shadow:0 20px 40px -20px rgba(30,25,10,.15);
+}
+.proj2-mockrow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.proj2-mock-panel{
+  background:var(--s100);border:1px solid var(--rule);border-radius:12px;padding:1rem 1.1rem;
+  opacity:0;will-change:transform,opacity;
+}
+.proj2-mock-left{transform:translateX(-60px)}
+.proj2-mock-right{transform:translateX(60px)}
+.proj2-mock-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.proj2-mock-dot.r{background:#E8927C}.proj2-mock-dot.y{background:var(--g400)}.proj2-mock-dot.g{background:#8FBF8A}
+.proj2-mock-line{height:6px;border-radius:4px;background:var(--s300);margin-top:.6rem}
+.proj2-mock-block{height:38px;border-radius:8px;background:linear-gradient(120deg,var(--g150),var(--s200));margin-top:.6rem}
+.proj2-mock-bars{display:flex;align-items:flex-end;gap:6px;height:44px;margin-top:.7rem}
+.proj2-mock-bars span{flex:1;background:var(--g300);border-radius:3px 3px 0 0}
+.proj2-windows{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.proj2-window{
+  border-radius:var(--radius);overflow:hidden;border:1px solid var(--rule);
+  clip-path:inset(0 0 100% 0);opacity:0;will-change:clip-path,opacity;
+}
+.proj2-window-bar{display:flex;gap:5px;padding:.5rem .7rem;background:var(--s200)}
+.proj2-window-bar span{width:7px;height:7px;border-radius:50%;background:var(--s400)}
+.proj2-window-content{padding:1rem 1.1rem;background:var(--s100)}
+.proj2-deliv{opacity:0;transform:translateY(8px);will-change:transform,opacity}
+.proj2-mask{overflow:hidden;position:relative}
+.proj2-mask .deliv-num{transform:translateY(100%);display:inline-block;will-change:transform}
+.proj2-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1rem}
+.proj2-footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.proj2-cta{opacity:0;transform:translateY(14px);will-change:transform,opacity}
+
+/* ─────────────────────────────────────────────────
+   SKILLS 2.0 — floating modular blocks
+───────────────────────────────────────────────── */
+.skl2-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.skl2-cat{
+  background:linear-gradient(160deg,var(--white),var(--s100));
+  border:1px solid var(--rule-str);border-radius:16px;padding:1.5rem 1.25rem;
+  opacity:0;transform:translateY(50px) rotate(var(--tilt,0deg)) scale(.9);
+  transition:transform .5s var(--ease),box-shadow .35s var(--ease);
+  will-change:transform,opacity;
+}
+.skl2-cat:hover{transform:rotate(0deg) scale(1.03) translateY(-4px)!important;box-shadow:0 30px 50px -25px rgba(30,25,10,.28)}
+.skl2-cat-head{display:flex;align-items:center;gap:.6rem;margin-bottom:1.1rem;padding-bottom:.85rem;border-bottom:1px solid var(--rule)}
+.skl2-cat-icon{font-size:1.15rem}
+.skl2-cat-title{font-family:var(--fd);font-size:1.05rem;color:var(--g600)}
+.skl2-blocks{display:flex;flex-wrap:wrap;gap:.5rem}
+.skl2-block{
+  font-size:.72rem;font-weight:500;color:var(--ink2);
+  background:var(--s100);border:1px solid var(--rule);border-radius:7px;
+  padding:.4rem .6rem;transition:transform .35s var(--ease),background .25s,border-color .25s;
+}
+.skl2-cat:hover .skl2-block{background:var(--white)}
+.skl2-cat:hover .skl2-block:nth-child(3n+1){transform:translate(-3px,-3px) rotate(-2deg)}
+.skl2-cat:hover .skl2-block:nth-child(3n+2){transform:translate(3px,2px) rotate(1deg)}
+.skl2-cat:hover .skl2-block:nth-child(3n){transform:translate(-2px,4px) rotate(2deg)}
+.skl2-block:hover{background:var(--g150)!important;border-color:var(--g300)}
+
+/* ─────────────────────────────────────────────────
+   EDUCATION 2.0 — roadmap
+───────────────────────────────────────────────── */
+.edu2-road{position:relative;padding:2rem 0 6rem}
+.edu2-path{width:100%;height:220px;display:block}
+#edu2PathDraw{stroke-dasharray:1400;stroke-dashoffset:1400;will-change:stroke-dashoffset}
+.edu2-stop{position:absolute;top:2rem;transform:translateX(-50%);width:min(230px,70vw);text-align:center}
+.edu2-node{
+  width:34px;height:34px;border-radius:50%;margin:0 auto .9rem;
+  background:var(--white);border:2px solid var(--rule-str);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:.9rem;color:var(--ink4);
+  transform:scale(.7);opacity:.5;
+  transition:transform .4s var(--ease),opacity .4s var(--ease),background .4s,border-color .4s,color .4s;
+  position:relative;z-index:2;
+}
+.edu2-node.on{transform:scale(1) rotate(360deg);opacity:1;background:var(--g400);border-color:var(--g400);color:var(--ink)}
+.edu2-card{
+  background:var(--white);border:1px solid var(--rule);border-radius:14px;
+  padding:1.1rem 1.1rem;text-align:left;
+  box-shadow:0 16px 34px -18px rgba(30,25,10,.16);
+  opacity:0;transform:translateY(24px) scale(.92);
+  transition:transform .5s var(--ease),opacity .5s var(--ease);
+}
+.edu2-card.on{opacity:1;transform:translateY(0) scale(1)}
+@media(max-width:900px){
+  .edu2-road{padding-bottom:2rem}
+  .edu2-path{display:none}
+  .edu2-stop{position:static;transform:none;width:100%;margin-bottom:1.75rem;text-align:left}
+  .edu2-node{margin:0 0 .75rem}
+}
+
+/* ─────────────────────────────────────────────────
+   CONTACT 2.0 — premium ending
+───────────────────────────────────────────────── */
+.ct2-pin{position:relative}
+.ct2-stage{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ct2-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;will-change:transform}
+.ct2-orb-a{width:340px;height:340px;background:var(--g300);top:8%;left:8%}
+.ct2-orb-b{width:260px;height:260px;background:var(--g500);bottom:6%;right:10%}
+.ct2-card{
+  position:relative;z-index:2;width:min(640px,88vw);
+  background:linear-gradient(165deg,var(--white),var(--s100));
+  border:1px solid var(--rule-str);border-radius:24px;
+  padding:2.5rem 2.25rem;text-align:center;
+  box-shadow:0 40px 80px -30px rgba(30,25,10,.28);
+  transform:scale(.62);will-change:transform;
+}
+.ct2-label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);font-weight:600;margin-bottom:.75rem}
+.ct2-hl{font-family:var(--fd);font-size:clamp(1.6rem,3.4vw,2.3rem);color:var(--ink);line-height:1.2;margin-bottom:.9rem}
+.ct2-hl em{color:var(--g500);font-style:italic}
+.ct2-body{font-size:.9rem;color:var(--ink3);line-height:1.65;max-width:32rem;margin:0 auto 1.5rem}
+.ct2-maincta{opacity:0;transform:translateY(14px);will-change:transform,opacity}
+.ct2-links{margin-top:2rem;display:flex;flex-direction:column;gap:.65rem;text-align:left}
+.ct2-link{opacity:0;will-change:transform,opacity}
+.ct2-link:nth-child(1){transform:translateX(-50px)}
+.ct2-link:nth-child(2){transform:translateX(50px)}
+.ct2-link:nth-child(3){transform:translateX(-50px)}
+
+@media(max-width:900px){
+  .exp2-body{grid-template-columns:1fr}
+  .proj2-mockrow,.proj2-windows{grid-template-columns:1fr}
+  .proj2-metrics{grid-template-columns:1fr 1fr}
+  .skl2-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .skl2-grid{grid-template-columns:1fr}
+  .proj2-metrics{grid-template-columns:1fr}
+}
 
 /* ─────────────────────────────────────────────────
    RESPONSIVE
@@ -739,25 +1003,51 @@ ul{list-style:none}
 <div class="orb orb-c" id="orbC" aria-hidden="true"></div>
 
 <!-- ── NAV ─────────────────────────────── -->
-<nav class="nav" id="nav" role="navigation" aria-label="Primary navigation">
-  <div class="nav-in">
-    <a class="nav-logo" href="#hero">Anurag <span>Mohanty</span></a>
-    <ul class="nav-links" role="list">
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#education">Education</a></li>
-      <li><a href="#contact" class="nav-cta">Contact me</a></li>
-    </ul>
-    <button class="mob-btn" id="mobBtn" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+<!-- ── SIDEBAR (desktop) ─────────────────────────────── -->
+<aside class="sidebar" id="sidebar" role="navigation" aria-label="Primary navigation">
+  <div class="sb-profile">
+    <div class="sb-avatar">AM</div>
+    <div>
+      <div class="sb-name">Anurag <span>Mohanty</span></div>
+      <div class="sb-role">Product Manager</div>
+    </div>
   </div>
-</nav>
+
+  <nav class="sb-nav" role="list">
+    <a href="#hero"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
+    <a href="#about"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>About</a>
+    <a href="#experience"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>Experience</a>
+    <a href="#projects"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>Projects</a>
+    <a href="#skills"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>Skills</a>
+    <a href="#education"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>Education</a>
+    <a href="#contact"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Contact</a>
+  </nav>
+
+  <div class="sb-spacer"></div>
+
+  <div class="sb-bottom">
+    <div class="sb-card">
+      <div class="sb-time" id="sbTime">--:--</div>
+      <div class="sb-date" id="sbDate">India</div>
+    </div>
+    <a href="https://drive.google.com/file/d/1MRbLRGy6vcd2N_N-LjwK_O-wPVEROxgI/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="sb-cv">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View CV
+    </a>
+  </div>
+</aside>
+
+<!-- ── TOPBAR (mobile) ─────────────────────────────── -->
+<div class="topbar" id="nav">
+  <a class="sb-name" href="#hero" style="font-size:1rem">Anurag <span>Mohanty</span></a>
+  <button class="mob-btn" id="mobBtn" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</div>
 
 <!-- Mobile menu -->
 <div class="mob-menu" id="mobMenu" role="dialog" aria-modal="true" aria-label="Navigation">
+  <a href="#hero"        class="ml">Home</a>
   <a href="#about"       class="ml">About</a>
   <a href="#experience"  class="ml">Experience</a>
   <a href="#projects"    class="ml">Projects</a>
@@ -765,6 +1055,9 @@ ul{list-style:none}
   <a href="#education"   class="ml">Education</a>
   <a href="#contact"     class="ml">Contact</a>
 </div>
+
+<div class="layout">
+<div class="main-content" id="mainContent">
 
 <!-- ── HERO ─────────────────────────────── -->
 <section class="hero" id="hero" aria-label="Introduction">
@@ -870,46 +1163,48 @@ ul{list-style:none}
 </div>
 
 <!-- ── ABOUT ─────────────────────────────── -->
-<section class="section section-cream" id="about" aria-label="About">
-  <div class="container">
-    <div class="about-grid">
+<section class="section section-cream ab2-section" id="about" aria-label="About">
+  <div class="container ab2-intro">
+    <p class="sec-eyebrow">About</p>
+    <h2 class="about-hl">Where product thinking meets <em>technical craft</em></h2>
+    <p class="about-sub">I approach every problem like a PM — starting with the user, reasoning backwards to a solution, and shipping something that measurably works. Keep scrolling — this one unfolds.</p>
+  </div>
 
-      <!-- Left: sticky headline — no contact info -->
-      <div class="about-left rv-l">
-        <p class="sec-eyebrow">About</p>
-        <h2 class="about-hl">Where product thinking meets <em>technical craft</em></h2>
-        <p class="about-sub">I approach every problem like a PM — starting with the user, reasoning backwards to a solution, and shipping something that measurably works.</p>
+  <div class="ab2-pin">
+    <div class="ab2-stage">
+      <div class="ab2-box" id="ab2Box" aria-hidden="true">
+        <div class="ab2-box-face ab2-box-top"></div>
+        <div class="ab2-box-face ab2-box-front"></div>
+        <div class="ab2-box-glow"></div>
       </div>
 
-      <!-- Right: story -->
-      <div>
-        <p class="about-body rv">I'm a product manager with a computer science foundation — someone equally comfortable writing a PRD, sketching a user flow in Figma, running a Python script to validate data, or architecting an AI agent with LangChain. Product and engineering aren't separate worlds to me; they're two sides of the same problem.</p>
-        <p class="about-body rv d1">My time at IQnext — a B2B SaaS startup building smart building and IoT infrastructure — gave me hands-on ownership of real challenges: designing access control systems across multiple locations, leading an AI copilot experience from concept to release, and automating configuration workflows that previously demanded significant manual effort. I worked inside Agile sprints alongside engineering daily, not just as a liaison, but as someone who could go deep on both the <em>"what"</em> and the <em>"how."</em></p>
-        <p class="about-body rv d2">What drives me is the intersection of AI and product experience — building tools that don't just automate tasks but genuinely reduce cognitive load. I'm looking for opportunities where that combined perspective can create outsized impact.</p>
-        <div class="trait-grid">
-          <div class="trait rv-s d1">
-            <div class="trait-icon">🧠</div>
-            <div class="trait-name">Systems Thinker</div>
-            <div class="trait-desc">From device data pipelines to permission models — I think in systems, constraints, and edge cases first.</div>
-          </div>
-          <div class="trait rv-s d2">
-            <div class="trait-icon">⚡</div>
-            <div class="trait-name">Technical Builder</div>
-            <div class="trait-desc">Python, APIs, Docker, and LLM tooling are part of my product process, not foreign territory.</div>
-          </div>
-          <div class="trait rv-s d3">
-            <div class="trait-icon">🎯</div>
-            <div class="trait-name">Research-Led</div>
-            <div class="trait-desc">I start with real pain points, not assumptions. Every prioritisation decision traces back to a user signal.</div>
-          </div>
-          <div class="trait rv-s d4">
-            <div class="trait-icon">🤖</div>
-            <div class="trait-name">AI-Native Mindset</div>
-            <div class="trait-desc">I design AI-augmented product experiences as a first principle — not retrofitted features, but core workflows.</div>
-          </div>
-        </div>
+      <div class="ab2-card" data-card="1">
+        <div class="ab2-card-icon">🧠</div>
+        <div class="ab2-card-title">Product Thinker</div>
+        <p class="ab2-card-desc">Starts with the user's pain point, reasons backwards, prioritises by impact — every decision traceable to a real signal.</p>
+      </div>
+      <div class="ab2-card" data-card="2">
+        <div class="ab2-card-icon">🤖</div>
+        <div class="ab2-card-title">AI Builder</div>
+        <p class="ab2-card-desc">Designs AI-augmented workflows as a first principle — LLMs, agents and automation built into the product, not bolted on.</p>
+      </div>
+      <div class="ab2-card" data-card="3">
+        <div class="ab2-card-icon">🧩</div>
+        <div class="ab2-card-title">Systems Thinker</div>
+        <p class="ab2-card-desc">From device data pipelines to permission models — thinks in systems, constraints and edge cases first.</p>
+      </div>
+      <div class="ab2-card" data-card="4">
+        <div class="ab2-card-icon">⚡</div>
+        <div class="ab2-card-title">Problem Solver</div>
+        <p class="ab2-card-desc">Comfortable writing a PRD, sketching a flow in Figma, or scripting in Python to validate an assumption.</p>
+      </div>
+      <div class="ab2-card" data-card="5">
+        <div class="ab2-card-icon">🎯</div>
+        <div class="ab2-card-title">User Obsessed</div>
+        <p class="ab2-card-desc">Reduces cognitive load, not just task time — measures success in whether people actually stop noticing the tool.</p>
       </div>
 
+      <p class="ab2-caption" id="ab2Caption">Scroll to unfold</p>
     </div>
   </div>
 </section>
@@ -923,36 +1218,61 @@ ul{list-style:none}
 </div>
 
 <!-- ── EXPERIENCE ─────────────────────────────── -->
-<section class="section" id="experience" aria-label="Work experience">
+<section class="section exp2-section" id="experience" aria-label="Work experience">
   <div class="container">
-    <div class="rv" style="margin-bottom:3.5rem">
+    <div style="margin-bottom:1rem">
       <p class="sec-eyebrow">Experience</p>
       <div class="sec-rule"></div>
     </div>
-    <div class="exp-track">
-      <div class="exp-block rv">
-        <div class="exp-pulse" aria-hidden="true"></div>
-        <div class="exp-node"  aria-hidden="true"></div>
-        <div class="exp-period">December 2025 – May 2026</div>
-        <h3 class="exp-title">Product Management Intern</h3>
-        <div class="exp-company">IQnext</div>
-        <div class="exp-co-note">B2B SaaS &middot; Smart building &amp; IoT solutions</div>
-        <div class="exp-bullets">
-          <div class="exp-bullet"><div class="bdot" aria-hidden="true"></div><span>Designed and standardised a role-based access control system for four distinct user types, enforcing strict data separation across locations — cutting configuration errors significantly and raising permission accuracy to near-perfect reliability.</span></div>
-          <div class="exp-bullet"><div class="bdot" aria-hidden="true"></div><span>Led end-to-end design of an AI copilot experience with role-based contextual guidance across product modules, reducing navigation burden and enabling faster task completion without added training overhead.</span></div>
-          <div class="exp-bullet"><div class="bdot" aria-hidden="true"></div><span>Conducted structured user research and feedback analysis to surface the highest-impact pain points, driving measurable improvements in feature usability across the platform.</span></div>
-          <div class="exp-bullet"><div class="bdot" aria-hidden="true"></div><span>Defined and shipped product logic to automate grouping of 1,000+ device data points, reducing manual configuration effort by nearly half and raising accuracy to 95% — working in Agile sprints (Zoho Sprints) to accelerate release cycles.</span></div>
-          <div class="exp-bullet"><div class="bdot" aria-hidden="true"></div><span>Owned email communication architecture — structured templates for alerts, notifications, and updates that reduced user confusion and improved information clarity at scale.</span></div>
-        </div>
-        <div class="exp-tags">
-          <span class="etag">PRD Writing</span>
-          <span class="etag">AI Copilot</span>
-          <span class="etag">RBAC Design</span>
-          <span class="etag">IoT Data</span>
-          <span class="etag">Agile / Scrum</span>
-          <span class="etag">User Research</span>
-          <span class="etag">Zoho Sprints</span>
-          <span class="etag">Figma</span>
+  </div>
+
+  <div class="exp2-pin">
+    <div class="exp2-stage">
+      <div class="container">
+        <div class="exp2-drawer" id="exp2Drawer">
+          <div class="exp2-drawer-bar" aria-hidden="true"></div>
+          <div class="exp2-drawer-inner">
+          <div class="exp2-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            IQnext &middot; Product Internship
+          </div>
+          <div class="exp2-drawer-head">
+            <div class="exp2-node" aria-hidden="true"></div>
+            <div>
+              <div class="exp2-period">December 2025 – May 2026</div>
+              <h3 class="exp2-title">Product Management Intern</h3>
+              <div class="exp2-company">IQnext <span>— B2B SaaS · Smart building &amp; IoT solutions</span></div>
+            </div>
+          </div>
+
+          <div class="exp2-body">
+            <div class="exp2-bullets" id="exp2Bullets">
+              <div class="exp2-bullet"><div class="bdot" aria-hidden="true"></div><span>Designed and standardised a role-based access control system for four distinct user types, enforcing strict data separation across locations.</span></div>
+              <div class="exp2-bullet"><div class="bdot" aria-hidden="true"></div><span>Led end-to-end design of an AI copilot experience with role-based contextual guidance across product modules.</span></div>
+              <div class="exp2-bullet"><div class="bdot" aria-hidden="true"></div><span>Conducted structured user research and feedback analysis to surface the highest-impact pain points across the platform.</span></div>
+              <div class="exp2-bullet"><div class="bdot" aria-hidden="true"></div><span>Defined and shipped product logic to automate grouping of 1,000+ device data points — working in Agile sprints (Zoho Sprints).</span></div>
+              <div class="exp2-bullet"><div class="bdot" aria-hidden="true"></div><span>Owned email communication architecture — structured templates that reduced user confusion at scale.</span></div>
+            </div>
+
+            <div class="exp2-metrics" id="exp2Metrics">
+              <div class="exp2-metric"><div class="exp2-metric-num" data-count="95" data-suffix="%">0%</div><div class="exp2-metric-label">Config accuracy reached</div></div>
+              <div class="exp2-metric"><div class="exp2-metric-num" data-count="50" data-suffix="%">0%</div><div class="exp2-metric-label">Less manual effort</div></div>
+              <div class="exp2-metric"><div class="exp2-metric-num" data-count="4" data-suffix="">0</div><div class="exp2-metric-label">User roles standardised</div></div>
+              <div class="exp2-metric"><div class="exp2-metric-num" data-count="1000" data-suffix="+">0</div><div class="exp2-metric-label">Device points automated</div></div>
+            </div>
+          </div>
+
+          <div class="exp2-tags" id="exp2Tags">
+            <span class="etag">PRD Writing</span>
+            <span class="etag">AI Copilot</span>
+            <span class="etag">RBAC Design</span>
+            <span class="etag">IoT Data</span>
+            <span class="etag">Agile / Scrum</span>
+            <span class="etag">User Research</span>
+            <span class="etag">Zoho Sprints</span>
+            <span class="etag">Figma</span>
+          </div>
+          </div><!-- /.exp2-drawer-inner -->
         </div>
       </div>
     </div>
@@ -972,96 +1292,111 @@ ul{list-style:none}
   CORRECT STRUCTURE: One project — "Internal Product Platform" at IQnext.
   Four sub-deliverables are features/tools WITHIN that platform, not separate projects.
 -->
-<section class="section section-cream" id="projects" aria-label="Projects">
+<section class="section section-cream proj2-section" id="projects" aria-label="Projects">
   <div class="container">
-    <div class="proj-header rv">
+    <div class="proj-header">
       <p class="sec-eyebrow">Projects</p>
       <div class="sec-rule"></div>
     </div>
+  </div>
 
-    <article class="proj-featured rv" aria-label="Internal Product Platform — IQnext">
-      <div class="proj-featured-bar" aria-hidden="true"></div>
-      <div class="proj-featured-inner">
+  <div class="proj2-pin">
+    <div class="proj2-stage">
+      <div class="container">
+        <article class="proj-featured proj2-card" id="proj2Card" aria-label="Internal Product Platform — IQnext">
+          <div class="proj-featured-bar" aria-hidden="true"></div>
+          <div class="proj-featured-inner">
 
-        <div class="proj-company-badge">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-          Internal Platform
-        </div>
+            <div class="proj-company-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+              Internal Platform
+            </div>
 
-        <h2 class="proj-title-main">Internal Product Platform</h2>
-        <p class="proj-context">
-          Designed and shipped an end-to-end internal product operations platform at IQnext — a suite of four interconnected tools that automated knowledge management, competitive monitoring, roadmap visibility, and feature governance. The goal: reduce the operational overhead on the product team while giving every department reliable access to product intelligence.
-        </p>
+            <h2 class="proj-title-main">Internal Product Platform</h2>
+            <p class="proj-context">
+              Designed and shipped an end-to-end internal product operations platform at IQnext — a suite of four interconnected tools that automated knowledge management, competitive monitoring, roadmap visibility, and feature governance.
+            </p>
 
-        <!-- Problem → Solution narrative for the platform -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:0">
-          <div style="padding:1.25rem;background:var(--s100);border-radius:var(--radius);border:1px solid var(--rule)">
-            <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);margin-bottom:.5rem">Problem</p>
-            <p style="font-size:.875rem;color:var(--ink2);line-height:1.65">Product knowledge was scattered, competitive awareness was reactive, roadmap updates required manual reformatting, and feature history had no single source of truth.</p>
+            <div class="proj2-windows" id="proj2Windows">
+              <div class="proj2-window">
+                <div class="proj2-window-bar"><span></span><span></span><span></span></div>
+                <div class="proj2-window-content">
+                  <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);margin-bottom:.5rem">Problem</p>
+                  <p style="font-size:.875rem;color:var(--ink2);line-height:1.65">Product knowledge was scattered, competitive awareness was reactive, roadmap updates required manual reformatting, and feature history had no single source of truth.</p>
+                </div>
+              </div>
+              <div class="proj2-window">
+                <div class="proj2-window-bar"><span></span><span></span><span></span></div>
+                <div class="proj2-window-content">
+                  <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);margin-bottom:.5rem">Approach</p>
+                  <p style="font-size:.875rem;color:var(--ink2);line-height:1.65">Identified high-friction touchpoints through team interviews, prioritised by impact-to-effort ratio, and shipped four targeted tools as one unified internal platform.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="proj-divider"></div>
+
+            <p class="proj-deliverables-label">Platform Deliverables</p>
+            <div class="proj-deliverables proj2-delivs" id="proj2Delivs">
+
+              <div class="deliv proj2-deliv">
+                <div class="proj2-mask"><div class="deliv-num">01 / AI Feature Explainer</div></div>
+                <div class="deliv-title">Automated query resolution for product knowledge</div>
+                <div class="deliv-desc">Deployed an AI-powered tool that ingests product documentation and resolves employee queries autonomously — eliminating repetitive questions routed to the product team.</div>
+                <div class="deliv-outcome">~20% reduction in PM overhead</div>
+              </div>
+
+              <div class="deliv proj2-deliv">
+                <div class="proj2-mask"><div class="deliv-num">02 / Competitor Intelligence Module</div></div>
+                <div class="deliv-title">Real-time competitive monitoring, embedded in the portal</div>
+                <div class="deliv-desc">Built a module that aggregates and surfaces competitor updates on the internal portal — shifting the team's competitive awareness from reactive to structured and ongoing.</div>
+                <div class="deliv-outcome">Proactive positioning in sprint planning</div>
+              </div>
+
+              <div class="deliv proj2-deliv">
+                <div class="proj2-mask"><div class="deliv-num">03 / Automated Roadmap Visualisation</div></div>
+                <div class="deliv-title">Upload-to-visual pipeline for roadmap distribution</div>
+                <div class="deliv-desc">A pipeline that detects newly uploaded roadmaps and auto-generates visual representations on the portal within seconds — replacing manual reformatting and version-control headaches.</div>
+                <div class="deliv-outcome">Zero manual effort for roadmap distribution</div>
+              </div>
+
+              <div class="deliv proj2-deliv">
+                <div class="proj2-mask"><div class="deliv-num">04 / Master Feature Tracker &amp; Request Hub</div></div>
+                <div class="deliv-title">Single source of truth for shipped features and new requests</div>
+                <div class="deliv-desc">A dual-purpose system documenting 100% of shipped features with structured metadata, plus a cross-company module where employees can submit and upvote feature requests.</div>
+                <div class="deliv-outcome">Improved roadmap prioritisation signal</div>
+              </div>
+
+            </div>
+
+            <div class="proj2-metrics" id="proj2Metrics">
+              <div class="exp2-metric"><div class="exp2-metric-num" data-count="20" data-suffix="%">0%</div><div class="exp2-metric-label">PM overhead reduced</div></div>
+              <div class="exp2-metric"><div class="exp2-metric-num" data-count="100" data-suffix="%">0%</div><div class="exp2-metric-label">Features documented</div></div>
+              <div class="exp2-metric"><div class="exp2-metric-num" data-count="4" data-suffix="">0</div><div class="exp2-metric-label">Tools shipped</div></div>
+            </div>
           </div>
-          <div style="padding:1.25rem;background:var(--s100);border-radius:var(--radius);border:1px solid var(--rule)">
-            <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);margin-bottom:.5rem">Approach</p>
-            <p style="font-size:.875rem;color:var(--ink2);line-height:1.65">Identified high-friction touchpoints through team interviews, prioritised by impact-to-effort ratio, and shipped four targeted tools as a unified internal platform — no extra overhead, no new tab proliferation.</p>
+
+          <div class="proj-featured-footer proj2-footer" id="proj2Footer">
+            <div>
+              <p class="proj-stack-label" style="margin-bottom:.5rem">Tech &amp; Tools</p>
+              <div class="proj-tech">
+                <span class="ptag">Python</span>
+                <span class="ptag">LLMs</span>
+                <span class="ptag">Prompt Engineering</span>
+                <span class="ptag">HTML / CSS</span>
+                <span class="ptag">Notion</span>
+                <span class="ptag">API Integration</span>
+                <span class="ptag">Process Design</span>
+              </div>
+            </div>
+            <a href="#contact" class="btn-gold-sm proj2-cta">
+              Discuss this project
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </div>
-        </div>
-
-        <div class="proj-divider"></div>
-
-        <p class="proj-deliverables-label">Platform Deliverables</p>
-        <div class="proj-deliverables">
-
-          <!-- Deliverable 1 -->
-          <div class="deliv rv d1">
-            <div class="deliv-num">01 / AI Feature Explainer</div>
-            <div class="deliv-title">Automated query resolution for product knowledge</div>
-            <div class="deliv-desc">Deployed an AI-powered tool that ingests product documentation and resolves employee queries autonomously — eliminating repetitive questions routed to the product team.</div>
-            <div class="deliv-outcome">~20% reduction in PM overhead</div>
-          </div>
-
-          <!-- Deliverable 2 -->
-          <div class="deliv rv d2">
-            <div class="deliv-num">02 / Competitor Intelligence Module</div>
-            <div class="deliv-title">Real-time competitive monitoring, embedded in the portal</div>
-            <div class="deliv-desc">Built a module that aggregates and surfaces competitor updates on the internal portal — shifting the team's competitive awareness from reactive to structured and ongoing.</div>
-            <div class="deliv-outcome">Proactive positioning in sprint planning</div>
-          </div>
-
-          <!-- Deliverable 3 -->
-          <div class="deliv rv d3">
-            <div class="deliv-num">03 / Automated Roadmap Visualisation</div>
-            <div class="deliv-title">Upload-to-visual pipeline for roadmap distribution</div>
-            <div class="deliv-desc">A pipeline that detects newly uploaded roadmaps and auto-generates visual representations on the portal within seconds — replacing manual reformatting and version-control headaches.</div>
-            <div class="deliv-outcome">Zero manual effort for roadmap distribution</div>
-          </div>
-
-          <!-- Deliverable 4 -->
-          <div class="deliv rv d4">
-            <div class="deliv-num">04 / Master Feature Tracker & Request Hub</div>
-            <div class="deliv-title">Single source of truth for shipped features and new requests</div>
-            <div class="deliv-desc">A dual-purpose system documenting 100% of shipped features with structured metadata, plus a cross-company module where employees can submit and upvote feature requests.</div>
-            <div class="deliv-outcome">Improved roadmap prioritisation signal</div>
-          </div>
-
-        </div>
+        </article>
       </div>
-
-      <!-- Footer: tech stack -->
-      <div class="proj-featured-footer">
-        <div>
-          <p class="proj-stack-label" style="margin-bottom:.5rem">Tech &amp; Tools</p>
-          <div class="proj-tech">
-            <span class="ptag">Python</span>
-            <span class="ptag">LLMs</span>
-            <span class="ptag">Prompt Engineering</span>
-            <span class="ptag">HTML / CSS</span>
-            <span class="ptag">Notion</span>
-            <span class="ptag">API Integration</span>
-            <span class="ptag">Process Design</span>
-          </div>
-        </div>
-      </div>
-    </article>
-
+    </div>
   </div>
 </section>
 
@@ -1074,128 +1409,109 @@ ul{list-style:none}
 </div>
 
 <!-- ── SKILLS ─────────────────────────────── -->
-<section class="section" id="skills" aria-label="Skills">
+<section class="section skl2-section" id="skills" aria-label="Skills" style="padding-bottom:3.5rem">
   <div class="container">
-    <div class="rv" style="margin-bottom:3rem">
+    <div style="margin-bottom:2rem">
       <p class="sec-eyebrow">Skills</p>
       <div class="sec-rule"></div>
+      <p class="about-sub" style="margin-top:.75rem;max-width:34rem">Modular capabilities that connect across product, AI and engineering — hover a cluster to see it regroup.</p>
     </div>
-    <div class="skills-grid">
-      <div class="sg rv">
-        <div class="sg-icon" aria-hidden="true">📋</div>
-        <div class="sg-title">Product</div>
-        <ul class="sl" role="list">
-          <li class="si">Product Roadmapping</li>
-          <li class="si">PRD Writing</li>
-          <li class="si">Agile / Scrum</li>
-          <li class="si">A/B Testing</li>
-          <li class="si">KPI Definition</li>
-          <li class="si">Stakeholder Management</li>
-          <li class="si">Market Research</li>
-          <li class="si">User Research</li>
-        </ul>
+
+    <div class="skl2-grid">
+      <div class="skl2-cat" data-tilt="-3">
+        <div class="skl2-cat-head"><span class="skl2-cat-icon">📋</span><span class="skl2-cat-title">Product</span></div>
+        <div class="skl2-blocks">
+          <span class="skl2-block">Roadmapping</span>
+          <span class="skl2-block">PRD Writing</span>
+          <span class="skl2-block">Agile / Scrum</span>
+          <span class="skl2-block">A/B Testing</span>
+          <span class="skl2-block">KPI Definition</span>
+          <span class="skl2-block">Stakeholder Mgmt</span>
+          <span class="skl2-block">Market Research</span>
+          <span class="skl2-block">User Research</span>
+        </div>
       </div>
-      <div class="sg rv d1">
-        <div class="sg-icon" aria-hidden="true">🤖</div>
-        <div class="sg-title">AI &amp; Automation</div>
-        <ul class="sl" role="list">
-          <li class="si">LLM Use Case Design</li>
-          <li class="si">Prompt Engineering</li>
-          <li class="si">LangChain</li>
-          <li class="si">CrewAI</li>
-          <li class="si">n8n Workflows</li>
-          <li class="si">AI Agent Architecture</li>
-        </ul>
+
+      <div class="skl2-cat" data-tilt="2">
+        <div class="skl2-cat-head"><span class="skl2-cat-icon">🤖</span><span class="skl2-cat-title">AI &amp; Automation</span></div>
+        <div class="skl2-blocks">
+          <span class="skl2-block">LLM Use Cases</span>
+          <span class="skl2-block">Prompt Engineering</span>
+          <span class="skl2-block">LangChain</span>
+          <span class="skl2-block">CrewAI</span>
+          <span class="skl2-block">n8n Workflows</span>
+          <span class="skl2-block">Agent Architecture</span>
+        </div>
       </div>
-      <div class="sg rv d2">
-        <div class="sg-icon" aria-hidden="true">💻</div>
-        <div class="sg-title">Engineering</div>
-        <ul class="sl" role="list">
-          <li class="si">Python</li>
-          <li class="si">MySQL</li>
-          <li class="si">HTML / CSS</li>
-          <li class="si">Git / GitHub</li>
-          <li class="si">Docker</li>
-          <li class="si">REST APIs</li>
-        </ul>
+
+      <div class="skl2-cat" data-tilt="-2">
+        <div class="skl2-cat-head"><span class="skl2-cat-icon">💻</span><span class="skl2-cat-title">Engineering</span></div>
+        <div class="skl2-blocks">
+          <span class="skl2-block">Python</span>
+          <span class="skl2-block">MySQL</span>
+          <span class="skl2-block">HTML / CSS</span>
+          <span class="skl2-block">Git / GitHub</span>
+          <span class="skl2-block">Docker</span>
+          <span class="skl2-block">REST APIs</span>
+        </div>
       </div>
-      <div class="sg rv d3">
-        <div class="sg-icon" aria-hidden="true">🛠</div>
-        <div class="sg-title">Tools &amp; Design</div>
-        <ul class="sl" role="list">
-          <li class="si">Figma</li>
-          <li class="si">Notion</li>
-          <li class="si">Zoho Sprints</li>
-          <li class="si">Google Workspace</li>
-          <li class="si">Microsoft Office</li>
-        </ul>
+
+      <div class="skl2-cat" data-tilt="3">
+        <div class="skl2-cat-head"><span class="skl2-cat-icon">🛠</span><span class="skl2-cat-title">Tools &amp; Design</span></div>
+        <div class="skl2-blocks">
+          <span class="skl2-block">Figma</span>
+          <span class="skl2-block">Notion</span>
+          <span class="skl2-block">Zoho Sprints</span>
+          <span class="skl2-block">Google Workspace</span>
+          <span class="skl2-block">Microsoft Office</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── ACTIVITIES ─────────────────────────────── -->
-<section class="section section-cream" id="activities" aria-label="Activities">
-  <div class="container">
-    <div class="rv" style="margin-bottom:3rem">
-      <p class="sec-eyebrow">Beyond the Job Description</p>
-      <div class="sec-rule"></div>
-    </div>
-    <div class="act-grid">
-      <div class="act rv">
-        <div class="act-icon" aria-hidden="true">⚙️</div>
-        <div>
-          <div class="act-name">AI Workflow Automation</div>
-          <div class="act-desc">Designed and deployed an AI agent to automate manual internal workflows — exploring where LLMs can substitute repetitive human effort without sacrificing output quality or reliability.</div>
-        </div>
-      </div>
-      <div class="act rv d1">
-        <div class="act-icon" aria-hidden="true">🔬</div>
-        <div>
-          <div class="act-name">AI Agent Experimentation</div>
-          <div class="act-desc">Actively experimenting with frontier models and agent frameworks to identify novel applications — treating AI exploration as a product problem: what's actually useful, and for whom?</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ── EDUCATION ─────────────────────────────── -->
-<section class="section" id="education" aria-label="Education">
+<section class="section edu2-section" id="education" aria-label="Education">
   <div class="container">
-    <div class="rv" style="margin-bottom:3rem">
+    <div style="margin-bottom:2rem">
       <p class="sec-eyebrow">Education</p>
       <div class="sec-rule"></div>
     </div>
-    <div class="edu-grid">
-      <div class="edu rv">
-        <div class="edu-bar" aria-hidden="true"></div>
-        <div class="edu-yr">2021 – 2025</div>
-        <div class="edu-degree">B.Tech — Computer Science &amp; Engineering</div>
-        <div class="edu-inst">College of Engineering and Management, Kolaghat</div>
-        <div class="edu-meta">
-          <div class="edu-grade">8.35 CGPA</div>
-          <div class="edu-type">Undergraduate</div>
+
+    <div class="edu2-road">
+      <svg class="edu2-path" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">
+        <path id="edu2PathLine" d="M20,110 C 200,20 300,200 500,110 C 700,20 800,200 980,110" fill="none" stroke="var(--rule)" stroke-width="2"/>
+        <path id="edu2PathDraw" d="M20,110 C 200,20 300,200 500,110 C 700,20 800,200 980,110" fill="none" stroke="var(--g400)" stroke-width="2.5"/>
+      </svg>
+
+      <div class="edu2-stop" style="left:2%">
+        <div class="edu2-node"><span>1</span></div>
+        <div class="edu2-card">
+          <div class="edu-yr">2019</div>
+          <div class="edu-degree">X — Secondary (CISCE)</div>
+          <div class="edu-inst">Contai Public School</div>
+          <div class="edu-meta"><div class="edu-grade">75.2%</div><div class="edu-type">Secondary</div></div>
         </div>
       </div>
-      <div class="edu rv d1">
-        <div class="edu-bar" aria-hidden="true"></div>
-        <div class="edu-yr">2019 – 2021</div>
-        <div class="edu-degree">XII — Science (CHSE, Odisha)</div>
-        <div class="edu-inst">Royal Higher Secondary School, Bhubaneswar</div>
-        <div class="edu-meta">
-          <div class="edu-grade">73.3%</div>
-          <div class="edu-type">Higher Secondary</div>
+
+      <div class="edu2-stop" style="left:50%">
+        <div class="edu2-node"><span>2</span></div>
+        <div class="edu2-card">
+          <div class="edu-yr">2019 – 2021</div>
+          <div class="edu-degree">XII — Science (CHSE, Odisha)</div>
+          <div class="edu-inst">Royal Higher Secondary School, Bhubaneswar</div>
+          <div class="edu-meta"><div class="edu-grade">73.3%</div><div class="edu-type">Higher Secondary</div></div>
         </div>
       </div>
-      <div class="edu rv d2">
-        <div class="edu-bar" aria-hidden="true"></div>
-        <div class="edu-yr">2019</div>
-        <div class="edu-degree">X — Secondary (CISCE)</div>
-        <div class="edu-inst">Contai Public School</div>
-        <div class="edu-meta">
-          <div class="edu-grade">75.2%</div>
-          <div class="edu-type">Secondary</div>
+
+      <div class="edu2-stop" style="left:96%">
+        <div class="edu2-node"><span>3</span></div>
+        <div class="edu2-card">
+          <div class="edu-yr">2021 – 2025</div>
+          <div class="edu-degree">B.Tech — Computer Science &amp; Engineering</div>
+          <div class="edu-inst">College of Engineering and Management, Kolaghat</div>
+          <div class="edu-meta"><div class="edu-grade">8.35 CGPA</div><div class="edu-type">Undergraduate</div></div>
         </div>
       </div>
     </div>
@@ -1211,67 +1527,40 @@ ul{list-style:none}
 </div>
 
 <!-- ── CONTACT ─────────────────────────────── -->
-<section class="section section-cream" id="contact" aria-label="Contact">
-  <div class="container">
-    <div class="contact-grid">
+<section class="section section-cream ct2-section" id="contact" aria-label="Contact">
+  <div class="ct2-pin">
+    <div class="ct2-stage">
+      <div class="ct2-orb ct2-orb-a" aria-hidden="true"></div>
+      <div class="ct2-orb ct2-orb-b" aria-hidden="true"></div>
 
-      <!-- Left: links — email, phone, LinkedIn -->
-      <div class="rv-l">
-        <p class="sec-eyebrow" style="margin-bottom:1rem">Get in touch</p>
-        <h2 class="contact-hl">Let&rsquo;s build something <em>worth shipping.</em></h2>
-        <p class="contact-body">I&rsquo;m actively exploring product roles where strategic thinking and technical execution both matter. If you&rsquo;re building at the intersection of AI and real-world impact, I&rsquo;d love to connect.</p>
-        <div class="clinks">
+      <div class="ct2-card" id="ct2Card">
+        <p class="ct2-label">Currently available</p>
+        <h2 class="ct2-hl">Let&rsquo;s build something <em>worth shipping.</em></h2>
+        <p class="ct2-body">I&rsquo;m actively exploring product roles where strategic thinking and technical execution both matter. If you&rsquo;re building at the intersection of AI and real-world impact, I&rsquo;d love to connect.</p>
 
-          <!-- Email -->
-          <a class="clink" href="mailto:anuragmohanty800@gmail.com" aria-label="Email Anurag">
-            <div class="cl-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </div>
-            <div class="cl-body">
-              <div class="cl-label">Email</div>
-              <div class="cl-val">anuragmohanty800@gmail.com</div>
-            </div>
-            <div class="cl-arrow" aria-hidden="true">→</div>
-          </a>
-
-          <!-- Phone -->
-          <a class="clink" href="tel:+918101267877" aria-label="Call Anurag">
-            <div class="cl-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 7.1 2 2 0 014.11 5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 12.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 19.92z"/></svg>
-            </div>
-            <div class="cl-body">
-              <div class="cl-label">Phone</div>
-              <div class="cl-val">+91 8101267877</div>
-            </div>
-            <div class="cl-arrow" aria-hidden="true">→</div>
-          </a>
-
-          <!-- LinkedIn -->
-          <a class="clink" href="https://www.linkedin.com/in/anuragmohanty11/" target="_blank" rel="noopener noreferrer" aria-label="View Anurag's LinkedIn profile">
-            <div class="cl-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-            </div>
-            <div class="cl-body">
-              <div class="cl-label">LinkedIn</div>
-              <div class="cl-val">linkedin.com/in/anuragmohanty11</div>
-            </div>
-            <div class="cl-arrow" aria-hidden="true">→</div>
-          </a>
-
-        </div>
-      </div>
-
-      <!-- Right: dark panel -->
-      <div class="contact-panel rv-r">
-        <div class="cp-label">Currently available</div>
-        <div class="cp-hl">Open to full-time product roles</div>
-        <div class="cp-body">Looking for roles where product thinking, AI, and technical depth all matter together — especially early-stage teams building purposeful AI applications. If that sounds like your team, let's talk.</div>
-        <a href="mailto:anuragmohanty800@gmail.com" class="btn-gold-sm">
+        <a href="mailto:anuragmohanty800@gmail.com" class="btn-gold ct2-maincta">
           Send a message
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-      </div>
 
+        <div class="ct2-links" id="ct2Links">
+          <a class="clink ct2-link" href="mailto:anuragmohanty800@gmail.com" aria-label="Email Anurag">
+            <div class="cl-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div class="cl-body"><div class="cl-label">Email</div><div class="cl-val">anuragmohanty800@gmail.com</div></div>
+            <div class="cl-arrow" aria-hidden="true">→</div>
+          </a>
+          <a class="clink ct2-link" href="tel:+918101267877" aria-label="Call Anurag">
+            <div class="cl-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 7.1 2 2 0 014.11 5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 12.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 19.92z"/></svg></div>
+            <div class="cl-body"><div class="cl-label">Phone</div><div class="cl-val">+91 8101267877</div></div>
+            <div class="cl-arrow" aria-hidden="true">→</div>
+          </a>
+          <a class="clink ct2-link" href="https://www.linkedin.com/in/anuragmohanty11/" target="_blank" rel="noopener noreferrer" aria-label="View Anurag's LinkedIn profile">
+            <div class="cl-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+            <div class="cl-body"><div class="cl-label">LinkedIn</div><div class="cl-val">linkedin.com/in/anuragmohanty11</div></div>
+            <div class="cl-arrow" aria-hidden="true">→</div>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1283,6 +1572,9 @@ ul{list-style:none}
   </div>
 </footer>
 
+</div><!-- /.main-content -->
+</div><!-- /.layout -->
+
 <!-- ─────────────────────────────────────────────────
    SCRIPTS
 ───────────────────────────────────────────────── -->
@@ -1293,9 +1585,21 @@ window.addEventListener('scroll',()=>{
   nav.classList.toggle('sc',window.scrollY>20);
 },{passive:true});
 
+// Force scroll-driven section animations to play instantly on direct nav-link navigation
+document.querySelectorAll('.sb-nav a, .ml').forEach(l=>{
+  l.addEventListener('click',()=>{
+    const id=l.getAttribute('href');
+    setTimeout(()=>{
+      if(id==='#about' && window.playAbout) window.playAbout();
+      if(id==='#experience' && window.playExperience) window.playExperience();
+      if(id==='#projects' && window.playProjects) window.playProjects();
+    },400);
+  });
+});
+
 // Active nav link highlighting via IntersectionObserver
 const secs=document.querySelectorAll('section[id]');
-const nls=document.querySelectorAll('.nav-links a');
+const nls=document.querySelectorAll('.sb-nav a, .ml');
 const secObs=new IntersectionObserver(es=>{
   es.forEach(e=>{
     if(e.isIntersecting)
@@ -1303,6 +1607,19 @@ const secObs=new IntersectionObserver(es=>{
   });
 },{rootMargin:'-28% 0px -62% 0px'});
 secs.forEach(s=>secObs.observe(s));
+
+// Live clock in sidebar
+const sbTime=document.getElementById('sbTime');
+function tickClock(){
+  if(!sbTime)return;
+  const d=new Date();
+  let h=d.getHours();const m=d.getMinutes();
+  const ap=h>=12?'PM':'AM';
+  h=h%12; if(h===0)h=12;
+  sbTime.textContent=`${h}:${m.toString().padStart(2,'0')} ${ap}`;
+}
+tickClock();
+setInterval(tickClock,1000*30);
 
 // Scroll reveal
 const rEls=document.querySelectorAll('.rv,.rv-l,.rv-r,.rv-s');
@@ -1358,6 +1675,185 @@ document.querySelectorAll('.ml').forEach(l=>{
     mbtn.querySelectorAll('span').forEach(s=>{s.style.transform='';s.style.opacity='';});
   });
 });
+</script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+gsap.defaults({ overwrite:'auto' });
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if(!reduced){
+
+/* ── ABOUT: unfolding container ───────────────────── */
+(function(){
+  const cards = gsap.utils.toArray('.ab2-card');
+  const box = document.getElementById('ab2Box');
+  const caption = document.getElementById('ab2Caption');
+  const assemble = [
+    {x:-300,y:-70,r:-6},{x:-150,y:110,r:3},{x:0,y:-150,r:0},
+    {x:150,y:110,r:-3},{x:300,y:-70,r:6}
+  ];
+
+  const tl = gsap.timeline({paused:true, defaults:{ease:'power2.out'}});
+  tl.to(box,{scaleY:1,opacity:1,duration:.45})
+    .to(box,{opacity:0,duration:.3},.45);
+
+  cards.forEach((card,i)=>{
+    tl.to(card,{opacity:1,x:0,y:0,z:0,rotateY:0,scale:1,duration:.45},.5+i*.22);
+  });
+
+  const assembleAt = .5 + cards.length*.22 + .25;
+  cards.forEach((card,i)=>{
+    const a = assemble[i];
+    tl.to(card,{x:a.x,y:a.y,rotate:a.r,scale:.62,duration:.55},assembleAt);
+  });
+  tl.to(caption,{opacity:0,duration:.3},assembleAt);
+
+  ScrollTrigger.create({
+    trigger:'.ab2-pin', start:'top top', end:'+=60%', pin:'.ab2-stage'
+  });
+  ScrollTrigger.create({
+    trigger:'.ab2-pin', start:'top 90%',
+    onEnter:()=>tl.restart(),
+    onEnterBack:()=>tl.restart()
+  });
+  window.playAbout = ()=>tl.restart();
+})();
+
+/* ── EXPERIENCE: expanding drawer ───────────────────── */
+(function(){
+  const drawer = document.getElementById('exp2Drawer');
+  const bullets = gsap.utils.toArray('#exp2Bullets .exp2-bullet');
+  const metrics = gsap.utils.toArray('#exp2Metrics .exp2-metric');
+  const tags = document.getElementById('exp2Tags');
+
+  gsap.set(drawer,{scaleY:.55,transformOrigin:'top center'});
+
+  const tl = gsap.timeline({paused:true, defaults:{ease:'power2.out'}});
+  tl.to(drawer,{scaleY:1,duration:.55})
+    .to(bullets,{opacity:1,x:0,stagger:.12,duration:.35},.3)
+    .to(metrics,{scaleY:1,opacity:1,stagger:.1,duration:.35},.85)
+    .to(tags,{opacity:1,y:0,duration:.35},1.15);
+
+  metrics.forEach(m=>{
+    const numEl = m.querySelector('.exp2-metric-num');
+    const target = parseFloat(numEl.getAttribute('data-count'));
+    const suffix = numEl.getAttribute('data-suffix')||'';
+    numEl.textContent = '0'+suffix;
+    m._countUp = ()=>{
+      const obj={v:0};
+      gsap.to(obj,{v:target,duration:.9,ease:'power1.out',onUpdate:()=>numEl.textContent=Math.round(obj.v)+suffix});
+    };
+  });
+
+  ScrollTrigger.create({
+    trigger:'.exp2-pin', start:'top top', end:'+=60%', pin:'.exp2-stage'
+  });
+  ScrollTrigger.create({
+    trigger:'.exp2-pin', start:'top 90%',
+    onEnter:()=>{ tl.restart(); metrics.forEach(m=>m._countUp()); },
+    onEnterBack:()=>{ tl.restart(); metrics.forEach(m=>m._countUp()); }
+  });
+  window.playExperience = ()=>{ tl.restart(); metrics.forEach(m=>m._countUp()); };
+})();
+
+/* ── PROJECTS: scroll-in reveal (no pin, normal flow) ───────────────────── */
+(function(){
+  const card = document.getElementById('proj2Card');
+  const mocks = gsap.utils.toArray('#proj2Mock .proj2-mock-panel');
+  const windows = gsap.utils.toArray('#proj2Windows .proj2-window');
+  const delivs = gsap.utils.toArray('#proj2Delivs .proj2-deliv');
+  const masks = gsap.utils.toArray('#proj2Delivs .proj2-mask .deliv-num');
+  const metrics = gsap.utils.toArray('#proj2Metrics .exp2-metric');
+  const cta = document.querySelector('.proj2-cta');
+
+  gsap.from(card,{opacity:0,y:40,duration:.7,ease:'power2.out',
+    scrollTrigger:{trigger:card,start:'top 85%'}});
+
+  gsap.to(mocks,{opacity:1,x:0,stagger:.15,duration:.5,ease:'power2.out',
+    scrollTrigger:{trigger:'#proj2Mock',start:'top 85%'}});
+
+  gsap.to(windows,{clipPath:'inset(0 0 0% 0)',opacity:1,stagger:.15,duration:.5,ease:'power2.out',
+    scrollTrigger:{trigger:'#proj2Windows',start:'top 85%'}});
+
+  gsap.to(delivs,{opacity:1,y:0,stagger:.1,duration:.4,ease:'power2.out',
+    scrollTrigger:{trigger:'#proj2Delivs',start:'top 85%'}});
+  gsap.to(masks,{y:'0%',stagger:.1,duration:.4,ease:'power2.out',
+    scrollTrigger:{trigger:'#proj2Delivs',start:'top 85%'}});
+
+  metrics.forEach(m=>{
+    const numEl = m.querySelector('.exp2-metric-num');
+    const target = parseFloat(numEl.getAttribute('data-count'));
+    const suffix = numEl.getAttribute('data-suffix')||'';
+    numEl.textContent = '0'+suffix;
+    gsap.to(m,{scaleY:1,opacity:1,duration:.4,ease:'power2.out',
+      scrollTrigger:{trigger:m,start:'top 88%',
+        onEnter:()=>{
+          const obj={v:0};
+          gsap.to(obj,{v:target,duration:.9,ease:'power1.out',onUpdate:()=>numEl.textContent=Math.round(obj.v)+suffix});
+        }
+      }});
+  });
+
+  gsap.to(cta,{opacity:1,y:0,duration:.4,ease:'power2.out',
+    scrollTrigger:{trigger:cta,start:'top 92%'}});
+})();
+
+/* ── SKILLS: floating modular blocks ───────────────────── */
+(function(){
+  document.querySelectorAll('.skl2-cat').forEach(cat=>{
+    cat.style.setProperty('--tilt', (cat.getAttribute('data-tilt')||0)+'deg');
+    gsap.to(cat,{
+      opacity:1, y:0, rotate:0, scale:1, duration:.9, ease:'power3.out',
+      scrollTrigger:{ trigger:cat, start:'top 88%' }
+    });
+  });
+})();
+
+/* ── EDUCATION: roadmap draw ───────────────────── */
+(function(){
+  const line = document.getElementById('edu2PathDraw');
+  const len = line.getTotalLength();
+  gsap.set(line,{strokeDasharray:len, strokeDashoffset:len});
+  gsap.to(line,{
+    strokeDashoffset:0, ease:'none',
+    scrollTrigger:{ trigger:'.edu2-road', start:'top 75%', end:'bottom 60%', scrub:0.6 }
+  });
+  gsap.utils.toArray('.edu2-stop').forEach((stop,i)=>{
+    const node = stop.querySelector('.edu2-node');
+    const card = stop.querySelector('.edu2-card');
+    ScrollTrigger.create({
+      trigger:stop, start:'top 78%',
+      onEnter:()=>{node.classList.add('on');card.classList.add('on')},
+      onLeaveBack:()=>{node.classList.remove('on');card.classList.remove('on')},
+    });
+  });
+})();
+
+/* ── CONTACT: premium ending ───────────────────── */
+(function(){
+  const cardEl = document.getElementById('ct2Card');
+  const links = gsap.utils.toArray('#ct2Links .ct2-link');
+  const cta = document.querySelector('.ct2-maincta');
+  const orbA = document.querySelector('.ct2-orb-a');
+  const orbB = document.querySelector('.ct2-orb-b');
+
+  const tl = gsap.timeline({
+    scrollTrigger:{ trigger:'.ct2-pin', start:'top top', end:'bottom bottom', scrub:0.3, pin:'.ct2-stage' }
+  });
+  tl.to(cardEl,{scale:1,duration:1,ease:'power2.out'},0)
+    .to(cta,{opacity:1,y:0,duration:.5},0.7)
+    .to(links,{opacity:1,x:0,stagger:0.25,duration:.7},1.0);
+
+  gsap.to(orbA,{x:60,y:-40,rotate:60,duration:14,repeat:-1,yoyo:true,ease:'sine.inOut'});
+  gsap.to(orbB,{x:-50,y:30,rotate:-50,duration:16,repeat:-1,yoyo:true,ease:'sine.inOut'});
+})();
+
+ScrollTrigger.refresh();
+} // !reduced
+
+// Keep sidebar active-link highlighting correct after pinned layout shifts
+window.addEventListener('load',()=>ScrollTrigger && ScrollTrigger.refresh && ScrollTrigger.refresh());
 </script>
 </body>
 </html>
