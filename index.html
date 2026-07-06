@@ -6,7 +6,7 @@
 <meta name="description" content="Anurag Mohanty — Product Manager building AI-driven product experiences in B2B SaaS">
 <meta property="og:title" content="Anurag Mohanty - Portfolio">
 <meta property="og:description" content="Product Management professional specialising in AI, B2B SaaS and technical product strategy.">
-<title>Anurag Mohanty — Portfolio</title>
+<title>Anurag Mohanty - Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -993,6 +993,20 @@ ul{list-style:none}
   .container{padding:0 1.25rem}
   .skills-grid,.trait-grid{grid-template-columns:1fr}
 }
+
+.desktop-banner{
+  display:none;
+  background:var(--g400);
+  color:var(--ink);
+  text-align:center;
+  font-size:.8rem;
+  font-weight:600;
+  padding:.6rem 1rem;
+}
+@media(max-width:900px){
+  .desktop-banner{display:block}
+}
+   
 </style>
 </head>
 <body>
@@ -1004,6 +1018,9 @@ ul{list-style:none}
 
 <!-- ── NAV ─────────────────────────────── -->
 <!-- ── SIDEBAR (desktop) ─────────────────────────────── -->
+<div class="desktop-banner">
+  For the best experience, please open this site on a desktop
+</div>
 <aside class="sidebar" id="sidebar" role="navigation" aria-label="Primary navigation">
   <div class="sb-profile">
     <div class="sb-avatar">AM</div>
